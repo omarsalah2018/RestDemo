@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Mapster;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using RestDemo.BLL.IServices;
+using RestDemo.BLL.Services;
 using RestDemo.Data;
 using RestDemo.Data.Models;
 using RestDemo.Dtos;
@@ -10,17 +13,13 @@ namespace RestDemo.Controllers
     [ApiController]
     public class UsersController : ControllerBase
     {
-        private static readonly List<User> _users = new List<User>
-        {
-            new User { Id = 1, Name = "Alice", Email = "Test1@test.com" },
-            new User { Id = 2, Name = "Bob", Email = "Test2@test.com" }
-        };
-
+        private readonly IUserService _userService;
         private readonly AppDbContext _appDbContext;
 
-        public UsersController(AppDbContext appDbContext)
+        public UsersController(AppDbContext appDbContext, IUserService userService)
         {
             _appDbContext = appDbContext;
+            _userService = userService;
         }
 
         [HttpGet("user-list")]
@@ -45,16 +44,7 @@ namespace RestDemo.Controllers
         [HttpPost]
         public IActionResult CreateUser([FromBody] CreateUserDto userDto)
         {
-            //_users.Add(user);
-            var userEntity = new User
-            {
-                Name = userDto.Name,
-                Email = userDto.Email
-            };
-            _appDbContext.Users.Add(userEntity);
-            var res = _appDbContext.SaveChanges();
-
-            return Ok();
+            return Ok(_userService.CreateUser(userDto));
         }
     }
 }

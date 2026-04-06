@@ -7,7 +7,7 @@ namespace RestDemo.Dtos
         //[Required]
         //[MinLength(5)]
         //[MaxLength(25)]
-        public string Name { get; set; }
+        public string UserName { get; set; }
 
         //[EmailAddress]
         public string Email { get; set; }
