@@ -46,5 +46,13 @@ namespace RestDemo.Controllers
         {
             return Ok(_userService.CreateUser(userDto));
         }
+
+        [HttpGet("test-async")]
+        public async Task<IActionResult> TestAsync()
+        {
+            Task.Delay(9000);
+
+            return Ok("Done");
+        }
     }
 }

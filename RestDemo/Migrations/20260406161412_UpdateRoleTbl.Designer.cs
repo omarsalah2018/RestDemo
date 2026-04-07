@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RestDemo.Data;
 
@@ -11,9 +12,11 @@ using RestDemo.Data;
 namespace RestDemo.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260406161412_UpdateRoleTbl")]
+    partial class UpdateRoleTbl
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -89,13 +92,13 @@ namespace RestDemo.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int?>("RoleId")
-                        .IsRequired()
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
                     b.HasIndex("RoleId")
-                        .IsUnique();
+                        .IsUnique()
+                        .HasFilter("[RoleId] IS NOT NULL");
 
                     b.ToTable("Users");
                 });
@@ -127,9 +130,7 @@ namespace RestDemo.Migrations
                 {
                     b.HasOne("RestDemo.Data.Models.Role", "Role")
                         .WithOne("User")
-                        .HasForeignKey("RestDemo.Data.Models.User", "RoleId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("RestDemo.Data.Models.User", "RoleId");
 
                     b.Navigation("Role");
                 });
