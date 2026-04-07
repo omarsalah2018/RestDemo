@@ -3,6 +3,7 @@ using Mapster;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.RateLimiting;
 using RestDemo.BLL.IServices;
 using RestDemo.BLL.Services;
 using RestDemo.Data;
@@ -14,7 +15,8 @@ namespace RestDemo.Controllers.V1
     [ApiVersion("1.0", Deprecated = true)]
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
-    [Authorize(Roles = "Admin")]
+    //[Authorize(Roles = "Admin")]
+    [EnableRateLimiting("fixed")]
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
