@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using RestDemo.Data;
 using RestDemo.Data.Models;
 
-namespace RestDemo.Controllers
+namespace RestDemo.Controllers.V1
 {
     [Route("api/[controller]")]
     [ApiController]

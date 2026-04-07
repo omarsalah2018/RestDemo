@@ -1,4 +1,5 @@
-﻿using Mapster;
+﻿using Asp.Versioning;
+using Mapster;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using RestDemo.BLL.IServices;
@@ -7,9 +8,10 @@ using RestDemo.Data;
 using RestDemo.Data.Models;
 using RestDemo.Dtos;
 
-namespace RestDemo.Controllers
+namespace RestDemo.Controllers.V1
 {
-    [Route("api/[controller]")]
+    [ApiVersion("1.0")]
+    [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
     public class UsersController : ControllerBase
     {
