@@ -1,4 +1,6 @@
-﻿namespace RestDemo.Data.Models
+﻿using Azure.Identity;
+
+namespace RestDemo.Data.Models
 {
     public class User
     {
@@ -9,8 +11,8 @@
         public int Age { get; set; } = 18;
         public bool IsActive { get; set; } = true;
         public int? RoleId { get; set; }
-        public Role Role { get; set; }
+        public virtual Role Role { get; set; }
 
-        public ICollection<UserRooms> UserRooms { get; set; } = new List<UserRooms>();
+        public virtual ICollection<UserRooms> UserRooms { get; set; } = new List<UserRooms>();
     }
 }

@@ -12,6 +12,9 @@ namespace RestDemo.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            //global query filter for rooms with capacity greater than 0
+            //modelBuilder.Entity<Room>().HasQueryFilter(x => x.Capastiy > 0);
+
             modelBuilder.Entity<User>()
                 .HasOne(e => e.Role)
                 .WithOne(e => e.User)

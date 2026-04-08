@@ -6,7 +6,7 @@
         public int UserId { get; set; }
         public int RoomId { get; set; }
 
-        public User User { get; set; }
-        public Room Room { get; set; }
+        public virtual User User { get; set; } = null!;
+        public virtual Room Room { get; set; } = null!;
     }
 }

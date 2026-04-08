@@ -75,7 +75,8 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
+        .UseLazyLoadingProxies());
 
 //Fluent Validation
 builder.Services.AddFluentValidationAutoValidation();
@@ -93,7 +94,9 @@ builder.Host.UseSerilog((context, services, configuration) => configuration
     .Enrich.FromLogContext());
 
 //services
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IUserMangment, UserMangment>();
 
 //versioing
 var apiVersioningBuilder = builder.Services.AddApiVersioning(options =>

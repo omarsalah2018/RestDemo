@@ -9,6 +9,6 @@ namespace RestDemo.Data.Models
         public int Capastiy { get; set; }
 
         [JsonIgnore]
-        public ICollection<UserRooms> UserRooms { get; set; } = new List<UserRooms>();
+        public virtual ICollection<UserRooms> UserRooms { get; set; } = new List<UserRooms>();
     }
 }

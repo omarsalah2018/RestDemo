@@ -1,4 +1,6 @@
-﻿namespace RestDemo.Data.Models
+﻿using Azure.Identity;
+
+namespace RestDemo.Data.Models
 {
     public class Role
     {
@@ -6,6 +8,6 @@
         public string Name { get; set; }
         public bool IsActive { get; set; }
 
-        public User User { get; set; }
+        public virtual User User { get; set; }
     }
 }

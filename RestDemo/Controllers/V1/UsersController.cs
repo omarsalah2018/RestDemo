@@ -15,22 +15,25 @@ namespace RestDemo.Controllers.V1
     [ApiVersion("1.0", Deprecated = true)]
     [Route("api/v{version:apiVersion}/[controller]")]
     [ApiController]
-    //[Authorize(Roles = "Admin")]
-    [EnableRateLimiting("fixed")]
+    [Authorize]
     public class UsersController : ControllerBase
     {
         private readonly IUserService _userService;
         private readonly AppDbContext _appDbContext;
+        private readonly IUserMangment _userMangment;
 
-        public UsersController(AppDbContext appDbContext, IUserService userService)
+        public UsersController(AppDbContext appDbContext, IUserService userService, IUserMangment userMangment)
         {
             _appDbContext = appDbContext;
             _userService = userService;
+            _userMangment = userMangment;
         }
 
         [HttpGet("user-list")]
         public IActionResult GetUsers()
         {
+            var role = _userMangment.Role;
+            var user = _userMangment.User;
             // var users = _users;
             var users = _appDbContext.Users.ToList();
             return Ok(users);
