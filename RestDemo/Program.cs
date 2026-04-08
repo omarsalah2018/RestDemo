@@ -8,16 +8,27 @@ using Microsoft.AspNetCore.RateLimiting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Polly;
+using Polly.Extensions.Http;
 using RestDemo.BLL.IServices;
 using RestDemo.BLL.Services;
 using RestDemo.Data;
 using RestDemo.Mapping;
 using Serilog;
+using System.Net;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+//Polly retry failure
+builder.Services.AddHttpClient("MyApiClient", client =>
+{
+    client.BaseAddress = new Uri("https://jsonplaceholder.typicode/");
+})
+.AddPolicyHandler(GetRetryPolicy());
+//.AddPolicyHandler(GetCircuitBreakerPolicy());
 
 //Rete Limiter
 builder.Services.AddRateLimiter(options =>
@@ -153,3 +164,35 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.Run();
+
+// Retry Policy
+static IAsyncPolicy<HttpResponseMessage> GetRetryPolicy()
+{
+    return HttpPolicyExtensions
+        .HandleTransientHttpError() // 5xx + network errors
+        .OrResult(msg => msg.StatusCode == HttpStatusCode.NotFound)
+        .WaitAndRetryAsync(5, retryAttempt => TimeSpan.FromSeconds(Math.Pow(2, retryAttempt))); // 2s, 4s, 8s
+}
+
+// Circuit Breaker Policy
+static IAsyncPolicy<HttpResponseMessage> GetCircuitBreakerPolicy()
+{
+    return HttpPolicyExtensions
+        .HandleTransientHttpError()
+        .CircuitBreakerAsync(handledEventsAllowedBeforeBreaking: 2,
+            durationOfBreak: TimeSpan.FromSeconds(30),
+              onBreak: (result, breakDelay) =>
+              {
+                  Console.WriteLine("Circuit OPEN for 30 seconds!");
+              },
+            onReset: () =>
+            {
+                Console.WriteLine("Circuit CLOSED again!");
+            },
+            onHalfOpen: () =>
+            {
+                Console.WriteLine("Circuit HALF-OPEN, testing...");
+            }
+
+            );
+}
